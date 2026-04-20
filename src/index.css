@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background: linear-gradient(to top, #b8e0d0 0%, #ffffff 50%);
+  min-height: 100vh;
+}
+/* SignUp.css */
+input {
+  background: #ffffff !important; /*우선순위를 높여주는 키워드*/
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+input:focus {
+  border-color: #00845B !important;
+  box-shadow: 0 0 0 3px #00845B25;
+  /* transform: scale(1.02); */
+  outline: none;
+  
+}
+
+/* input:hover {
+  /* transform: scale(1.01);
+} */
+
+button[type="submit"] {
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+button[type="submit"]:hover {
+  /* transform: scale(1.03); */
+  box-shadow: 0 4px 16px #00845B40;
+}
+
+button[type="submit"]:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}

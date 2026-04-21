@@ -1,14 +1,17 @@
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { getDocument, getDocumentCategories } from "../api/document"
 
 export default function Document() {
+    const { title } = useParams()
+    const docTitle = title || "미림위키:대문"
+
     const [document, setDocument] = useState(null)
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
         async function fetchDocument() {
-            const { data, error } = await getDocument("미림위키:대문")
+            const { data, error } = await getDocument(docTitle)
             if (error) {
                 console.error("문서 조회 실패:", error)
                 return
@@ -24,7 +27,7 @@ export default function Document() {
             setCategories(catData.map(item => item.categories))
         }
         fetchDocument()
-    }, [])
+    }, [docTitle])
 
     if (!document) return <p>로딩 중...</p>
 

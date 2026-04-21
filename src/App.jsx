@@ -11,6 +11,7 @@ function App() {
       <Route path="/login" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/wiki/:title" element={<Home />} />
     </Routes>
     </div>
   )

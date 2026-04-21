@@ -1,16 +1,49 @@
 import { Link } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { getDocument, getDocumentCategories } from "../api/document"
+
 export default function Document() {
+    const [document, setDocument] = useState(null)
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        async function fetchDocument() {
+            const { data, error } = await getDocument("미림위키:대문")
+            if (error) {
+                console.error("문서 조회 실패:", error)
+                return
+            }
+            setDocument(data)
+
+            // 문서의 카테고리 조회
+            const { data: catData, error: catError } = await getDocumentCategories(data.id)
+            if (catError) {
+                console.error("카테고리 조회 실패:", catError)
+                return
+            }
+            setCategories(catData.map(item => item.categories))
+        }
+        fetchDocument()
+    }, [])
+
+    if (!document) return <p>로딩 중...</p>
+
     return(
         <>
         <div className="w-[70%] px-4 my-3 grid grid-cols-[3fr_1fr] gap-4">
             <div className="bg-white rounded-sm border border-gray-300 p-4">
-                <p className="text-3xl font-semibold">미림위키:대문</p>
-                <p className="text-xs mt-2">최근 수정 시각 : 2023-10-10 12:00:00</p>
+                <p className="text-3xl font-semibold">{document.title}</p>
+                <p className="text-xs mt-2">최근 수정 시각 : {new Date(document.updated_at).toLocaleString()}</p>
                 <div className="bg-white rounded-sm border border-gray-400 mt-4 p-1 ">
-                    <p className="text-xs"> 분류 : <Link to="#" className="text-[#00845B] font-semibold">미림위키</Link></p>
+                    <p className="text-xs"> 분류 : {categories.map((cat, i) => (
+                        <span key={cat.id}>
+                            {i > 0 && ", "}
+                            <Link to="#" className="text-[#00845B] font-semibold">{cat.name}</Link>
+                        </span>
+                    ))}</p>
                 </div>
                 <div className="bg-[#00845B] my-4 w-full h-24">
-                    
+
                 </div>
                 <div className="grid grid-cols-[4fr_7fr] gap-4">
                     <div>
@@ -20,8 +53,7 @@ export default function Document() {
                    </div>
                 <div>
                     <pre className="whitespace-pre-wrap break-words">
-                        미림위키는 미림마이스터고 학생들이 함께 만들어가는 위키입니다.
-                        자유롭게 편집하고, 지식을 공유하며, 학교 생활에 도움이 되는 정보를 나누는 공간입니다.
+                        {document.content}
                     </pre>
                 </div>
 
